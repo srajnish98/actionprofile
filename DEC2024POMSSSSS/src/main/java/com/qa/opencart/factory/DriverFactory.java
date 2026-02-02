@@ -101,7 +101,7 @@ public class DriverFactory {
 
 	// run it on remote- grid
 	private void initRemoteDriver(String browserName) {
-
+//String remoteUrl = System.getenv("REMOTE_URL");
 		switch (browserName) {
 		case "chrome":
 			try {
