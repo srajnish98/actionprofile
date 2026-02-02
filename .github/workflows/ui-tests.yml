@@ -41,6 +41,8 @@ jobs:
       with:
         name: selenium-test-artifacts
         path: |
+          DEC2024POMSSSSS/target/surefire-reports/
+          DEC2024POMSSSSS/target/screenshots/
           target/surefire-reports/
           target/screenshots/
         retention-days: 7
