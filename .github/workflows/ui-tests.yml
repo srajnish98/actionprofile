@@ -40,14 +40,16 @@ jobs:
             -p 5432:5432 \
             postgres:12-alpine
           
-          # Wait for Postgres to initialize its internal engine
-          sleep 15
+          # Wait for Postgres to be TRULY ready (Exit Code 0)
+          echo "Waiting for Postgres to be ready..."
+          timeout 60s bash -c 'until docker exec postgres pg_isready -U postgres; do sleep 2; done'
           
-          # 2. Start Healenium Backend
+          # 2. Start Healenium Backend (Fixed Connection String)
           docker run -d --name hlm-backend --network hlm-net \
             -p 8000:8000 \
-            -e SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/healenium \
-            -e SPRING_DATASOURCE_USERNAME=postgres -e SPRING_DATASOURCE_PASSWORD=postgres \
+            -e SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/healenium?currentSchema=public \
+            -e SPRING_DATASOURCE_USERNAME=postgres \
+            -e SPRING_DATASOURCE_PASSWORD=postgres \
             healenium/hlm-backend:3.4.1
           
           # 3. Start Selenoid
@@ -56,7 +58,6 @@ jobs:
             -v /var/run/docker.sock:/var/run/docker.sock \
             -v $(pwd)/config/browsers.json:/etc/selenoid/browsers.json \
             aerokube/selenoid:latest-release
-
       - name: Wait for Services (with Debug)
         run: |
           echo "Waiting for Healenium Backend..."
