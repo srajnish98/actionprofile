@@ -30,6 +30,7 @@ jobs:
 
     - name: 4. Run Maven Tests
       # We use 'continue-on-error' so the report step still runs if tests fail
+      working-directory: ./your-subfolder-name
       run: mvn clean test
       continue-on-error: true
 
