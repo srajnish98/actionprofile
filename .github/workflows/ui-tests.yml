@@ -32,6 +32,8 @@ jobs:
 
       - name: Run Sanity Tests
         working-directory: ./DEC2024POMSSSSS
+        env:
+          REMOTE_URL: http://localhost:4444/wd/hub
         run: mvn clean test -P sanity -U
         continue-on-error: true
         
@@ -72,6 +74,8 @@ jobs:
 
       - name: Run Regression Tests
         working-directory: ./DEC2024POMSSSSS
+        env:
+          REMOTE_URL: http://localhost:4444/wd/hub
         run: mvn clean test -P regression -U
         continue-on-error: true
         
