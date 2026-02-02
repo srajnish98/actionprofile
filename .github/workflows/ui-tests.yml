@@ -40,7 +40,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: testng-native-reports
-          path: DEC2024POMSSSSS/target/surefire-reports/
+          path: "**/target/surefire-reports/**"
 
       - name: Save Allure Results
         if: always()
@@ -80,7 +80,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: testng-native-reports
-          path: DEC2024POMSSSSS/target/surefire-reports/
+          path: "**/target/surefire-reports/**"
 
       - name: Save Allure Results
         if: always()
