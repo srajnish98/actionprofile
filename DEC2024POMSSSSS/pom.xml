@@ -77,6 +77,12 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven.surefire.version}</version>
                 <configuration>
+				<properties>
+                  <property>
+                     <name>usedefaultlisteners</name>
+                     <value>true</value>
+                 </property>
+                </properties>
                     <argLine>
                         -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
                     </argLine>
