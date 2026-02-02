@@ -1,16 +1,14 @@
-name: Selenium Java CI Pipeline
+name: Selenium UI CI with Selenoid
 
-# Trigger the workflow on push or pull request to main branch
 on:
   push:
     branches: [ "main" ]
-  workflow_dispatch:
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch: # Allows manual trigger from the UI
 
 jobs:
-  build-and-test:
-    # Use the latest Ubuntu runner
+  selenium-tests:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,25 +22,26 @@ jobs:
         distribution: 'temurin'
         cache: 'maven'
 
-    - name: 3. Verify Browser Installation
-      # GitHub Ubuntu runners come with Chrome/Firefox pre-installed
-      run: google-chrome --version
+    - name: 3. Start Selenoid (Docker)
+      # This action starts Selenoid and pulls browser containers automatically
+      uses: Xotabu4/selenoid-github-action@v2
+      with:
+        selenoid-start-arguments: |
+          --browsers 'chrome' --last-versions 1
+        # Selenoid will be available at http://localhost:4444/wd/hub
 
     - name: 4. Run Maven Tests
-      # We use 'continue-on-error' so the report step still runs if tests fail
+      # Note the working-directory points to your specific folder
       working-directory: ./DEC2024POMSSSSS
       run: mvn clean test
       continue-on-error: true
 
     - name: 5. Archive Test Screenshots & Reports
-      # This step runs even if the previous step (tests) failed
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: selenium-test-artifacts
+        name: selenium-test-results
         path: |
           DEC2024POMSSSSS/target/surefire-reports/
           DEC2024POMSSSSS/target/screenshots/
-          target/surefire-reports/
-          target/screenshots/
         retention-days: 7
